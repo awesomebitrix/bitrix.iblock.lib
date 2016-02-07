@@ -1,0 +1,22 @@
+{
+    "name": "falur/bitrix-iblock",
+    "type": "library",
+    "description": "Bitrix Iblock",
+    "keywords": ["bitrix", "iblock"],
+    "license": "MIT",
+    "require": {
+        "php": ">=5.4.0"
+    },
+    "authors": [
+        {
+            "name": "Ildar Enakaev",
+            "email": "ienakaev@ya.ru"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Falur\\": "src/"
+        }
+    },
+    "minimum-stability": "dev"
+}
