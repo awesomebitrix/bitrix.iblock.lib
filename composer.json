@@ -3,7 +3,7 @@
     "type": "library",
     "description": "Bitrix Iblock",
     "keywords": ["bitrix", "iblock"],
-    "license": "MIT",
+    "license": "GNU General Public License http://www.gnu.org/licenses/gpl-2.0.html",
     "require": {
         "php": ">=5.4.0"
     },
