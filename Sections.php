@@ -61,7 +61,9 @@ class Sections
 
         $arSection = CIBlockSection::GetList($arSort, $arFilter, true, $arSelect)->GetNext();
 
-        self::setImages($arSection, $imgCache);
+        if ($arSection) {
+            self::setImages($arSection, $imgCache);
+        }
 
         $arResult = $arSection;
 
