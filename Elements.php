@@ -48,7 +48,16 @@ class Elements
         'PROPERTY_*'
     ];
 
-    public static function getElements($arFilter = [], $arSort = [], $pagination = false, $imgCache = false)
+    /**
+     *
+     * @param array $arFilter
+     * @param array $arSort
+     * @param int|boolean|null $pagination
+     * @param array|boolean|null $imgCache
+     * @param array $pageNavSettings
+     * @return array
+     */
+    public static function getElements(array $arFilter = [], array $arSort = [], $pagination = false, $imgCache = false, array $pageNavSettings = ['name' => 'Страницы:', 'template' => '.default'])
     {
         $arSelect = self::$arSelect;
         $arResult = ['ITEMS' => [], 'PAGINATION' => ''];
@@ -73,13 +82,23 @@ class Elements
 
         if ($pagination) {
             $arResult['PAGINATION'] =
-                $rsElements->GetPageNavStringEx($navComponentObject, 'Страницы:', '.default');
+                $rsElements->GetPageNavStringEx(
+                    $navComponentObject,
+                    $pageNavSettings['name'],
+                    $pageNavSettings['template']
+                );
         }
 
         return $arResult;
     }
 
-    public static function getElement($arFilter = [], $imgCache = false)
+    /**
+     *
+     * @param array $arFilter
+     * @param array|boolean|null $imgCache
+     * @return type
+     */
+    public static function getElement(array $arFilter = [], $imgCache = false)
     {
         $arSelect = self::$arSelect;
         $arResult = [];
@@ -100,11 +119,13 @@ class Elements
         return $arResult;
     }
 
-    public static function setImages(&$arItem, $imgCache)
+    /**
+     *
+     * @param array $arItem
+     * @param array|boolean|null $imgCache
+     */
+    public static function setImages(array &$arItem, $imgCache)
     {
-        $img_cache_type = isset($imgCache['type']) ? $imgCache['type'] : BX_RESIZE_IMAGE_EXACT;
-        $img_cache_size = isset($imgCache['size']) ? $imgCache['size'] : $imgCache;
-
         $arItem['PREVIEW_PICTURE'] =
             0 < $arItem['PREVIEW_PICTURE']
             ? CFile::GetFileArray($arItem['PREVIEW_PICTURE'])
@@ -115,18 +136,27 @@ class Elements
             ? CFile::GetFileArray($arItem['DETAIL_PICTURE'])
             : null;
 
-        $arItem['PREVIEW_PICTURE_CACHE'] =
-            is_array($imgCache) && $arItem['PREVIEW_PICTURE']
-            ?  CFile::ResizeImageGet($arItem['PREVIEW_PICTURE'], $img_cache_size, $img_cache_type)
-            : null;
+        if ($imgCache) {
+            $img_cache_type = isset($imgCache['type']) ? $imgCache['type'] : BX_RESIZE_IMAGE_EXACT;
+            $img_cache_size = isset($imgCache['size']) ? $imgCache['size'] : $imgCache;
 
-        $arItem['DETAIL_PICTURE_CACHE'] =
-            is_array($imgCache) && $arItem['DETAIL_PICTURE']
-            ?  CFile::ResizeImageGet($arItem['DETAIL_PICTURE'], $img_cache_size, $img_cache_type)
-            : null;
+            $arItem['PREVIEW_PICTURE_CACHE'] =
+                is_array($imgCache) && $arItem['PREVIEW_PICTURE']
+                ?  CFile::ResizeImageGet($arItem['PREVIEW_PICTURE'], $img_cache_size, $img_cache_type)
+                : null;
+
+            $arItem['DETAIL_PICTURE_CACHE'] =
+                is_array($imgCache) && $arItem['DETAIL_PICTURE']
+                ?  CFile::ResizeImageGet($arItem['DETAIL_PICTURE'], $img_cache_size, $img_cache_type)
+                : null;
+        }
     }
 
-    public static function setButtons(&$arItem)
+    /**
+     *
+     * @param array $arItem
+     */
+    public static function setButtons(array &$arItem)
     {
         $arButtons = CIBlock::GetPanelButtons(
                         $arItem['IBLOCK_ID'], $arItem['ID'], 0,

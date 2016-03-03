@@ -39,7 +39,14 @@ class Sections
         'UF_*'
     ];
 
-    public static function getSections($arFilter = [], $arSort = [], $imgCache = false)
+    /**
+     *
+     * @param array $arFilter
+     * @param array $arSort
+     * @param array|boolean|null $imgCache
+     * @return array
+     */
+    public static function getSections(array $arFilter = [], array $arSort = [], $imgCache = false)
     {
         $arSelect = self::$arSelect;
         $arResult = ['SECTIONS' => [], 'SPAGINATION' => ''];
@@ -54,7 +61,13 @@ class Sections
         return $arResult;
     }
 
-    public static function getSection($arFilter = [], $imgCache = false)
+    /**
+     *
+     * @param array $arFilter
+     * @param array|boolean|null $imgCache
+     * @return type
+     */
+    public static function getSection(array $arFilter = [], $imgCache = false)
     {
         $arSelect = self::$arSelect;
         $arResult = [];
@@ -70,11 +83,13 @@ class Sections
         return $arResult;
     }
 
-    public static function setImages(&$arSection, $imgCache)
+    /**
+     *
+     * @param array $arSection
+     * @param array|boolean|null $imgCache
+     */
+    public static function setImages(array &$arSection, $imgCache)
     {
-        $img_cache_type = isset($imgCache['type']) ? $imgCache['type'] : BX_RESIZE_IMAGE_EXACT;
-        $img_cache_size = isset($imgCache['size']) ? $imgCache['size'] : $imgCache;
-
         $arSection['PICTURE'] =
             0 < $arSection['PICTURE']
             ? CFile::GetFileArray($arSection['PICTURE'])
@@ -85,15 +100,20 @@ class Sections
             ? CFile::GetFileArray($arSection['DETAIL_PICTURE'])
             : null;
 
-        $arSection['PICTURE_CACHE'] = 
-            is_array($imgCache) && $arSection['PICTURE']
-            ? CFile::ResizeImageGet($arSection['PICTURE'], $img_cache_size, $img_cache_type)
-            : null;
-                
-         $arSection['DETAIL_PICTURE_CACHE'] =
-            is_array($imgCache) && $arSection['DETAIL_PICTURE']
-            ? CFile::ResizeImageGet($arSection['DETAIL_PICTURE'], $img_cache_size, $img_cache_type)
-            : null;
+        if ($imgCache) {
+            $img_cache_type = isset($imgCache['TYPE']) ? $imgCache['TYPE'] : BX_RESIZE_IMAGE_EXACT;
+            $img_cache_size = isset($imgCache['SIZE']) ? $imgCache['SIZE'] : $imgCache;
+
+            $arSection['PICTURE_CACHE'] =
+                is_array($imgCache) && $arSection['PICTURE']
+                ? CFile::ResizeImageGet($arSection['PICTURE'], $img_cache_size, $img_cache_type)
+                : null;
+
+             $arSection['DETAIL_PICTURE_CACHE'] =
+                is_array($imgCache) && $arSection['DETAIL_PICTURE']
+                ? CFile::ResizeImageGet($arSection['DETAIL_PICTURE'], $img_cache_size, $img_cache_type)
+                : null;
+        }
     }
 
     public static function getPath($iblock_id, $section_id)
